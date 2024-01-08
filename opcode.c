@@ -3,7 +3,7 @@
 #include<ctype.h>
 #include"monty.h"
 
-char *command_arg;
+char *command_arg = NULL;
 
 /**
  * push - adds a new node at the beginning of a stack
