@@ -4,7 +4,6 @@ char *command_arg = NULL;
  * push - pushes a node to the top of stack
  * @stack: pointer to the head node pointer of stack
  * @line: the line number
- * @arg: arguments
  * Return: Nothing.
  */
 void push(stack_t** stack, unsigned int line)
