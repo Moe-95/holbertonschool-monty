@@ -3,6 +3,8 @@
 #include <ctype.h>
 #include "monty.h"
 
+char *command_arg;
+
 /**
  * push - adds a new node at the beginning of a stack
  * @stack: double pointer to the head of the stack
