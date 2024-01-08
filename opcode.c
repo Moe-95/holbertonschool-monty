@@ -1,4 +1,5 @@
 #include"monty.h"
+char *command_arg = NULL;
 /**
  * push - pushes a node to the top of stack
  * @stack: pointer to the head node pointer of stack
@@ -6,7 +7,7 @@
  * @arg: arguments
  * Return: Nothing.
  */
-void push(stack_t** stack, unsigned int line, char* arg)
+void push(stack_t** stack, unsigned int line)
 {
 stack_t* node = NULL;
 
@@ -25,7 +26,7 @@ free_stack(stack);
 exit(EXIT_FAILURE);
 }
 
-node->n = atoi(arg);
+node->n = atoi(command_arg);
 node->prev = NULL;
 node->next = *stack;
 
