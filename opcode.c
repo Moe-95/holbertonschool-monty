@@ -7,9 +7,8 @@
  * push - adds a new node at the beginning of a stack
  * @stack: double pointer to the head of the stack
  * @line_number: line number of the opcode in the file
- * @arg: argument passed to the opcode
  */
-void push(stack_t **stack, unsigned int line_number, char *arg)
+void push(stack_t **stack, unsigned int line_number)
 {
 if (stack == NULL)
 {
@@ -24,14 +23,14 @@ fprintf(stderr, "Error: malloc failed\n");
 exit(EXIT_FAILURE);
 }
 
-if (!arg || (*arg && !isdigit(*arg)))
+if (!command_arg || (*command_arg && !isdigit(*command_arg)))
 {
 fprintf(stderr, "L%d: usage: push integer\n", line_number);
 free(new_node);
 exit(EXIT_FAILURE);
 }
 
-new_node->n = atoi(arg);
+new_node->n = atoi(command_arg);
 new_node->prev = NULL;
 
 if (*stack != NULL)
@@ -42,6 +41,7 @@ new_node->next = *stack;
 
 *stack = new_node;
 }
+
 
 /**
  * pall - prints all the values on the stack
