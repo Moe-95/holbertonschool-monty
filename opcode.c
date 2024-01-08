@@ -1,127 +1,100 @@
-#include"monty.h"
-char *command_arg = NULL;
+#include "monty.h"
+
 /**
- * push - pushes a node to the top of stack
- * @stack: pointer to the head node pointer of stack
- * @line: the line number
- * Return: Nothing.
+ * op_push - adds a new node at the stack
+ * @stack: pointer to the head of the stack
+ * @line_number: number of the current line
+ *
+ * Return: void.
  */
-void push(stack_t** stack, unsigned int line)
+void op_push(stack_t **stack, unsigned int line_number)
 {
-stack_t* node = NULL;
+stack_t *new = NULL;
 
-if (stack == NULL)
+line_number = line_number;
+new = malloc(sizeof(stack_t));
+if (new == NULL)
 {
-fprintf(stderr, "L%d: Error stack not found\n", line);
-exit(EXIT_FAILURE);
-}
-
-node = malloc(sizeof(stack_t));
-
-if (node == NULL)
-{
+free(var.getl_info);
+fclose(var.fp_struct);
 fprintf(stderr, "Error: malloc failed\n");
-free_stack(stack);
 exit(EXIT_FAILURE);
 }
+new->n = var.node_data;
 
-node->n = atoi(command_arg);
-node->prev = NULL;
-node->next = *stack;
+new->next = *stack;
+new->prev = NULL;
+if ((*stack) != NULL)
+{
+(*stack)->prev = new;
+}
 
-if (*stack)
-(*stack)->prev = node;
-
-(*stack) = node;
+*stack = new;
 }
 
 /**
- * pall - prints the data of all nodes in stack
- * @stack: pointer to the head node pointer of stack
- * @line: the line number
- * Return: Nothing.
+ * op_pall - prints all the values on the stack
+ * @stack: pointer to the head of the stack
+ * @line_number: number of the current line
+ *
+ * Return: void.
  */
-void pall(stack_t** stack, unsigned int line)
+void op_pall(stack_t **stack, unsigned int line_number)
 {
-stack_t* temp;
-(void)line;
+stack_t *printer_aux = *stack;
 
-temp = *stack;
+printer_aux = *stack;
+line_number = line_number;
 
-while (temp)
+while (printer_aux != NULL)
 {
-printf("%d\n", temp->n);
-temp = temp->next;
-}
-}
-
-/**
- * pint - prints the value at the top of stack
- * @stack: pointer to the head node pointer of stack
- * @line: the line number
- * Return: Nothing.
- */
-void pint(stack_t** stack, unsigned int line)
-{
-stack_t* temp;
-
-if (stack == NULL || *stack == NULL)
-{
-fprintf(stderr, "L%d: can't pint, stack empty\n", line);
-exit(EXIT_FAILURE);
-}
-
-temp = *stack;
-while (temp)
-{
-if (temp->prev == NULL)
-break;
-temp = temp->prev;
-}
-printf("%d\n", temp->n);
-}
-
-/**
- * pop - removes the top element of stack
- * @stack: pointer to the head node pointer of stack
- * @line: the line number
- * Return: Nothing.
- */
-void pop(stack_t** stack, unsigned int line)
-{
-if (stack == NULL || *stack == NULL) {
-fprintf(stderr, "L%d: can't pop an empty stack\n", line);
-exit(EXIT_FAILURE);
-}
-
-if ((*stack)->next != NULL)
-{
-*stack = (*stack)->next;
-free((*stack)->prev);
-(*stack)->prev = NULL;
-} else {
-free(*stack);
-*stack = NULL;
+printf("%d\n", printer_aux->n);
+printer_aux = printer_aux->next;
 }
 }
 
 /**
- * swap - swaps the top two elements of the stack
- * @stack: pointer to the head node pointer of stack
- * @line: the line number
- * Return: Nothing.
+ * op_pint - prints the value at the top of the stack.
+ * @stack: pointer to the head of the stack
+ * @line_number: number of the current line
+ *
+ * Return: void.
  */
-void swap(stack_t** stack, unsigned int line)
+void op_pint(stack_t **stack, unsigned int line_number)
 {
-int data;
-
-if (stack == NULL || *stack == NULL || !((*stack)->next))
+if ((*stack) == NULL)
 {
-fprintf(stderr, "L%d: can't swap, stack too short\n", line);
+fprintf(stderr, "L%d: can't pint, stack empty\n", line_number);
+free(var.getl_info);
+fclose(var.fp_struct);
+handle_dlist_head((*stack));
 exit(EXIT_FAILURE);
 }
 
-data = (*stack)->n;
+printf("%d\n", ((*stack))->n);
+}
+
+/**
+ * op_swap - swaps the top two elements of the stack.
+ * @stack: pointer to the head of the stack
+ * @line_number: number of the current line
+ *
+ * Return: void.
+ */
+void op_swap(stack_t **stack, unsigned int line_number)
+{
+int tmp = 0;
+
+if ((*stack) == NULL || (*stack)->next == NULL)
+{
+fprintf(stderr, "L%d: can't swap, stack too short\n", line_number);
+free(var.getl_info);
+fclose(var.fp_struct);
+handle_dlist_head((*stack));
+exit(EXIT_FAILURE);
+}
+
+tmp = (*stack)->n;
 (*stack)->n = (*stack)->next->n;
-(*stack)->next->n = data;
+(*stack)->next->n = tmp;
 }
