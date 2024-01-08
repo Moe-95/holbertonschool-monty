@@ -1,56 +1,127 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<ctype.h>
 #include"monty.h"
-
-char *command_arg = NULL;
-
 /**
- * push - adds a new node at the beginning of a stack
- * @stack: double pointer to the head of the stack
- * @line_number: line number of the opcode in the file
+ * push - pushes a node to the top of stack
+ * @stack: pointer to the head node pointer of stack
+ * @line: the line number
+ * @arg: arguments
+ * Return: Nothing.
  */
-void push(stack_t **stack, unsigned int line_number)
+void push(stack_t** stack, unsigned int line, char* arg)
 {
-if (!command_arg || (*command_arg && !isdigit(*command_arg)))
+stack_t* node = NULL;
+
+if (stack == NULL)
 {
-fprintf(stderr, "L%d: usage: push integer\n", line_number);
+fprintf(stderr, "L%d: Error stack not found\n", line);
 exit(EXIT_FAILURE);
 }
 
-stack_t *new_node = malloc(sizeof(stack_t));
-if (!new_node)
+node = malloc(sizeof(stack_t));
+
+if (node == NULL)
 {
 fprintf(stderr, "Error: malloc failed\n");
+free_stack(stack);
 exit(EXIT_FAILURE);
 }
 
-new_node->n = atoi(command_arg);
-new_node->prev = NULL;
+node->n = atoi(arg);
+node->prev = NULL;
+node->next = *stack;
 
 if (*stack)
-{
-new_node->next = *stack;
-(*stack)->prev = new_node;
-}
+(*stack)->prev = node;
 
-*stack = new_node;
+(*stack) = node;
 }
 
 /**
- * pall - prints all the values on the stack
- * @stack: double pointer to the head of the stack
- * @line_number: line number of the opcode in the file
+ * pall - prints the data of all nodes in stack
+ * @stack: pointer to the head node pointer of stack
+ * @line: the line number
+ * Return: Nothing.
  */
-void pall(stack_t **stack, unsigned int line_number)
+void pall(stack_t** stack, unsigned int line)
 {
-stack_t *current = *stack;
+stack_t* temp;
+(void)line;
 
-(void)line_number;
+temp = *stack;
 
-while (current)
+while (temp)
 {
-printf("%d\n", current->n);
-current = current->next;
+printf("%d\n", temp->n);
+temp = temp->next;
 }
+}
+
+/**
+ * pint - prints the value at the top of stack
+ * @stack: pointer to the head node pointer of stack
+ * @line: the line number
+ * Return: Nothing.
+ */
+void pint(stack_t** stack, unsigned int line)
+{
+stack_t* temp;
+
+if (stack == NULL || *stack == NULL)
+{
+fprintf(stderr, "L%d: can't pint, stack empty\n", line);
+exit(EXIT_FAILURE);
+}
+
+temp = *stack;
+while (temp)
+{
+if (temp->prev == NULL)
+break;
+temp = temp->prev;
+}
+printf("%d\n", temp->n);
+}
+
+/**
+ * pop - removes the top element of stack
+ * @stack: pointer to the head node pointer of stack
+ * @line: the line number
+ * Return: Nothing.
+ */
+void pop(stack_t** stack, unsigned int line)
+{
+if (stack == NULL || *stack == NULL) {
+fprintf(stderr, "L%d: can't pop an empty stack\n", line);
+exit(EXIT_FAILURE);
+}
+
+if ((*stack)->next != NULL)
+{
+*stack = (*stack)->next;
+free((*stack)->prev);
+(*stack)->prev = NULL;
+} else {
+free(*stack);
+*stack = NULL;
+}
+}
+
+/**
+ * swap - swaps the top two elements of the stack
+ * @stack: pointer to the head node pointer of stack
+ * @line: the line number
+ * Return: Nothing.
+ */
+void swap(stack_t** stack, unsigned int line)
+{
+int data;
+
+if (stack == NULL || *stack == NULL || !((*stack)->next))
+{
+fprintf(stderr, "L%d: can't swap, stack too short\n", line);
+exit(EXIT_FAILURE);
+}
+
+data = (*stack)->n;
+(*stack)->n = (*stack)->next->n;
+(*stack)->next->n = data;
 }
