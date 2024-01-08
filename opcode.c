@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include"monty.h"
+#include <ctype.h>
+#include "monty.h"
 
 /**
  * push - adds a new node at the beginning of a stack
  * @stack: double pointer to the head of the stack
  * @line_number: line number of the opcode in the file
+ * @arg: argument passed to the opcode
  */
-void push(stack_t **stack, unsigned int line_number)
+void push(stack_t **stack, unsigned int line_number, char *arg)
 {
 if (stack == NULL)
 {
@@ -22,7 +24,7 @@ fprintf(stderr, "Error: malloc failed\n");
 exit(EXIT_FAILURE);
 }
 
-if (!isdigit(arg))
+if (!arg || (*arg && !isdigit(*arg)))
 {
 fprintf(stderr, "L%d: usage: push integer\n", line_number);
 free(new_node);
@@ -58,6 +60,7 @@ printf("%d\n", current->n);
 current = current->next;
 }
 }
+
 /**
  * pint - prints the value at the top of the stack
  * @stack: double pointer to the head of the stack
